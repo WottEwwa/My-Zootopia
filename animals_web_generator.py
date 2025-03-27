@@ -5,20 +5,23 @@ def load_data(file_path):
     with open(file_path, "r", encoding='utf-8') as handle:
         return json.load(handle)
 
+
 # Load animals data
 animals_data = load_data('animals_data.json')
 
 # Generate animals information as plain text
 output = ''
 for animal in animals_data:
-    output += '<li class="cards__item">'
-    output += f"Name: {animal.get('name', 'N/A')}<br/>\n"
-    output += f"Diet: {animal.get('characteristics', {}).get('diet', 'N/A')}<br/>\n"
-    output += f"Locations: {', '.join(animal.get('locations', ['N/A']))}<br/>\n"
-    output += f"Type: {animal.get('characteristics', {}).get('type', 'N/A')}<br/>\n\n"
-    output += '</li>'
+    output += f'<li class="cards__item">\n'
+    output += f'<div class="card__title">{animal.get('name', 'N/A')}</div>\n'
+    output += f'<p class="card__text">\n'
+    output += f'<strong>Diet:</strong> {animal.get('characteristics', {}).get('diet', 'N/A')}<br/>\n'
+    output += f'<strong>Locations:</strong> {', '.join(animal.get('locations', ['N/A']))}<br/>\n'
+    output += f'<strong>Type:</strong> {animal.get('characteristics', {}).get('type', 'N/A')}<br>\n'
+    output += f'</p></li>\n'
 
     print(output)
+
 try:
     # Load template
     with open('animals_template.html', 'r', encoding='utf-8') as template_file:
