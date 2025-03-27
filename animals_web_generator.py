@@ -11,11 +11,14 @@ animals_data = load_data('animals_data.json')
 # Generate animals information as plain text
 output = ''
 for animal in animals_data:
-    output += f"Name: {animal.get('name', 'N/A')}\n"
-    output += f"Diet: {animal.get('characteristics', {}).get('diet', 'N/A')}\n"
-    output += f"Locations: {', '.join(animal.get('locations', ['N/A']))}\n"
-    output += f"Type: {animal.get('characteristics', {}).get('type', 'N/A')}\n\n"
+    output += '<li class="cards__item">'
+    output += f"Name: {animal.get('name', 'N/A')}<br/>\n"
+    output += f"Diet: {animal.get('characteristics', {}).get('diet', 'N/A')}<br/>\n"
+    output += f"Locations: {', '.join(animal.get('locations', ['N/A']))}<br/>\n"
+    output += f"Type: {animal.get('characteristics', {}).get('type', 'N/A')}<br/>\n\n"
+    output += '</li>'
 
+    print(output)
 try:
     # Load template
     with open('animals_template.html', 'r', encoding='utf-8') as template_file:
