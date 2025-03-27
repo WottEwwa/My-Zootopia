@@ -1,19 +1,40 @@
 import json
 
 def load_data(file_path):
-  """ Loads a JSON file """
-  with open(file_path, "r") as handle:
-    return json.load(handle)
+    """Loads a JSON file"""
+    with open(file_path, "r", encoding='utf-8') as handle:
+        return json.load(handle)
 
+# Load animals data
 animals_data = load_data('animals_data.json')
 
+# Generate animals information as plain text
+output = ''
 for animal in animals_data:
-  print(f"Name: {animal.get('name', 'N/A')}")
-  print(f"Diet: {animal.get('characteristics', {}).get('diet', 'N/A')}")
-  
-  # location array
-  locations = animal.get('locations', [])
-  print(f"Locations: {', '.join(locations) if locations else 'N/A'}")
+    output += f"Name: {animal.get('name', 'N/A')}\n"
+    output += f"Diet: {animal.get('characteristics', {}).get('diet', 'N/A')}\n"
+    output += f"Locations: {', '.join(animal.get('locations', ['N/A']))}\n"
+    output += f"Type: {animal.get('characteristics', {}).get('type', 'N/A')}\n\n"
 
-  print(f"Type: {animal.get('characteristics', {}).get('type', 'N/A')}")
-  print()
+try:
+    # Load template
+    with open('animals_template.html', 'r', encoding='utf-8') as template_file:
+        template_content = template_file.read()
+    
+    # Verify placeholder exists
+    if '__REPLACE_ANIMALS_INFO__' not in template_content:
+        raise ValueError("Template is missing '__REPLACE_ANIMALS_INFO__' placeholder")
+    
+    # Replace placeholder with generated content
+    complete_text = template_content.replace('__REPLACE_ANIMALS_INFO__', output)
+    
+    # Write output file
+    with open('animals.html', 'w', encoding='utf-8') as output_file:
+        output_file.write(complete_text)
+    
+    print("Successfully generated: animals.html")
+
+except FileNotFoundError:
+    print("Error: animals_template.html not found")
+except Exception as e:
+    print(f"An error occurred: {str(e)}")
