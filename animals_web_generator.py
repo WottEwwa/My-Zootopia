@@ -6,9 +6,6 @@ def load_data(file_path):
         return json.load(handle)
 
 
-# Load animals data
-animals_data = load_data('animals_data.json')
-
 def serialize_animal(animal_obj):
     """Serialize an animal object to HTML"""
     output = ''
@@ -59,29 +56,41 @@ def serialize_animal(animal_obj):
     return output
 
 
-output = ''
-for animal_obj in animals_data:
-    output += serialize_animal(animal_obj)
+def main():
+    try:
+        # Load animals data
+        animals_data = load_data('animals_data.json')
+        
+        output = ''
+        for animal_obj in animals_data:
+            output += serialize_animal(animal_obj)
 
-try:
-    # Load template
-    with open('animals_template.html', 'r', encoding='utf-8') as template_file:
-        template_content = template_file.read()
-    
-    # Verify placeholder exists
-    if '__REPLACE_ANIMALS_INFO__' not in template_content:
-        raise ValueError("Template is missing '__REPLACE_ANIMALS_INFO__' placeholder")
-    
-    # Replace placeholder with generated content
-    complete_text = template_content.replace('__REPLACE_ANIMALS_INFO__', output)
-    
-    # Write output file
-    with open('animals.html', 'w', encoding='utf-8') as output_file:
-        output_file.write(complete_text)
-    
-    print("Successfully generated: animals.html")
+        # Load and process template
+        with open('animals_template.html', 'r', encoding='utf-8') as template_file:
+            template_content = template_file.read()
+        
+        if '__REPLACE_ANIMALS_INFO__' not in template_content:
+            raise ValueError("Template is missing '__REPLACE_ANIMALS_INFO__' placeholder")
+        
+        complete_text = template_content.replace('__REPLACE_ANIMALS_INFO__', output)
+        
+        # Write output file
+        with open('animals.html', 'w', encoding='utf-8') as output_file:
+            output_file.write(complete_text)
+        
+        print("Successfully generated: animals.html")
+        return True
 
-except FileNotFoundError:
-    print("Error: animals_template.html not found")
-except Exception as e:
-    print(f"An error occurred: {str(e)}")
+    except FileNotFoundError as e:
+        print(f"Error: File not found - {str(e)}")
+        return False
+    except json.JSONDecodeError:
+        print("Error: Invalid JSON format in animals_data.json")
+        return False
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return False
+
+
+if __name__ == "__main__":
+    main()
